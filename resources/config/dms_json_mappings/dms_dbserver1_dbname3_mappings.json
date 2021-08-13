@@ -1,0 +1,75 @@
+{
+    "rules": [
+        {
+            "rule-type": "transformation",
+            "rule-id": "1",
+            "rule-name": "1",
+            "rule-target": "column",
+            "object-locator": {
+                "schema-name": "%",
+                "table-name": "%",
+                "column-name": "%",
+                "data-type": "uint1"
+            },
+            "rule-action": "change-data-type",
+            "data-type": {
+                "type": "int4"
+            }
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "3",
+            "rule-name": "3",
+            "object-locator": {
+                "schema-name": "dbo",
+                "table-name": "Table1"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "5",
+            "rule-name": "5",
+            "object-locator": {
+                "schema-name": "dbo",
+                "table-name": "Table2"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "8",
+            "rule-name": "8",
+            "object-locator": {
+                "schema-name": "dbo",
+                "table-name": "Table3"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "9",
+            "rule-name": "9",
+            "object-locator": {
+                "schema-name": "dbo",
+                "table-name": "Table4"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "11",
+            "rule-name": "11",
+            "object-locator": {
+                "schema-name": "dbo",
+                "table-name": "Table5"
+            },
+            "rule-action": "include",
+            "filters": []
+        }
+    ]
+}

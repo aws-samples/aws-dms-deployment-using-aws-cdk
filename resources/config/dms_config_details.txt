@@ -1,0 +1,10 @@
+server,dbname
+dbserver1,dbname1
+dbserver1,dbname2
+dbserver1,dbname3
+dbserver2,dbname1
+dbserver3,dbname1
+dbserver3,dbname2
+dbserver4,dbname1
+dbserver4,dbname2
+dbserver5,dbname1

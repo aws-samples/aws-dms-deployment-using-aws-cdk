@@ -1,0 +1,4 @@
+key,value
+instancesize,dms.r5.xlarge
+maxfilesize,4096
+task_migration_type,full-load-and-cdc

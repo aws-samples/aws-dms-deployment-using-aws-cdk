@@ -1,0 +1,899 @@
+{
+  "Resources": {
+    "DMSReplicationSubnetGrp": {
+      "Type": "AWS::DMS::ReplicationSubnetGroup",
+      "Properties": {
+        "ReplicationSubnetGroupDescription": "DMS replication subnet group",
+        "SubnetIds": [
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputRefvpcprivateSubnet1SubnetAE1393DC18E7B349"
+          },
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputRefvpcprivateSubnet2Subnet1C8B0CEE5A404381"
+          }
+        ],
+        "ReplicationSubnetGroupIdentifier": "aws-cdk-cdk-subnetgroup"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/DMSReplicationSubnetGrp"
+      }
+    },
+    "dbserver1instance": {
+      "Type": "AWS::DMS::ReplicationInstance",
+      "Properties": {
+        "ReplicationInstanceClass": "dms.r5.2xlarge",
+        "AutoMinorVersionUpgrade": true,
+        "EngineVersion": "3.4.3",
+        "MultiAZ": true,
+        "PubliclyAccessible": false,
+        "ReplicationInstanceIdentifier": "dbserver1-instance",
+        "ReplicationSubnetGroupIdentifier": {
+          "Ref": "DMSReplicationSubnetGrp"
+        },
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-instance"
+      }
+    },
+    "dbserver1dbname1sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname1",
+        "EndpointIdentifier": "dbserver1-dbname1-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.10",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname1-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver1dbname1s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver1-dbname1-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver1/dbname1/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname1-s3-target-endpoint"
+      }
+    },
+    "dbserver1dbname1all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver1instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver1dbname1sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver1dbname1s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver1-dbname1-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname1-all"
+      }
+    },
+    "dbserver1dbname2sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname2",
+        "EndpointIdentifier": "dbserver1-dbname2-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.10",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname2-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver1dbname2s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver1-dbname2-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver1/dbname2/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname2-s3-target-endpoint"
+      }
+    },
+    "dbserver1dbname2all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver1instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver1dbname2sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver1dbname2s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver1-dbname2-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname2-all"
+      }
+    },
+    "dbserver1dbname3sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname3",
+        "EndpointIdentifier": "dbserver1-dbname3-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.10",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname3-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver1dbname3s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver1-dbname3-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver1/dbname3/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname3-s3-target-endpoint"
+      }
+    },
+    "dbserver1dbname3all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver1instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver1dbname3sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver1dbname3s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver1-dbname3-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver1-dbname3-all"
+      }
+    },
+    "dbserver2instance": {
+      "Type": "AWS::DMS::ReplicationInstance",
+      "Properties": {
+        "ReplicationInstanceClass": "dms.r5.2xlarge",
+        "AutoMinorVersionUpgrade": true,
+        "EngineVersion": "3.4.3",
+        "MultiAZ": true,
+        "PubliclyAccessible": false,
+        "ReplicationInstanceIdentifier": "dbserver2-instance",
+        "ReplicationSubnetGroupIdentifier": {
+          "Ref": "DMSReplicationSubnetGrp"
+        },
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver2-instance"
+      }
+    },
+    "dbserver2dbname1sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname1",
+        "EndpointIdentifier": "dbserver2-dbname1-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.11",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver2-dbname1-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver2dbname1s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver2-dbname1-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver2/dbname1/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver2-dbname1-s3-target-endpoint"
+      }
+    },
+    "dbserver2dbname1all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver2instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver2dbname1sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver2dbname1s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver2-dbname1-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver2-dbname1-all"
+      }
+    },
+    "dbserver3instance": {
+      "Type": "AWS::DMS::ReplicationInstance",
+      "Properties": {
+        "ReplicationInstanceClass": "dms.r5.2xlarge",
+        "AutoMinorVersionUpgrade": true,
+        "EngineVersion": "3.4.3",
+        "MultiAZ": true,
+        "PubliclyAccessible": false,
+        "ReplicationInstanceIdentifier": "dbserver3-instance",
+        "ReplicationSubnetGroupIdentifier": {
+          "Ref": "DMSReplicationSubnetGrp"
+        },
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-instance"
+      }
+    },
+    "dbserver3dbname1sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname1",
+        "EndpointIdentifier": "dbserver3-dbname1-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.12",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-dbname1-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver3dbname1s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver3-dbname1-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver3/dbname1/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-dbname1-s3-target-endpoint"
+      }
+    },
+    "dbserver3dbname1all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver3instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver3dbname1sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver3dbname1s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver3-dbname1-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-dbname1-all"
+      }
+    },
+    "dbserver3dbname2sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname2",
+        "EndpointIdentifier": "dbserver3-dbname2-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.12",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-dbname2-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver3dbname2s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver3-dbname2-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver3/dbname2/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-dbname2-s3-target-endpoint"
+      }
+    },
+    "dbserver3dbname2all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver3instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver3dbname2sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver3dbname2s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver3-dbname2-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver3-dbname2-all"
+      }
+    },
+    "dbserver4instance": {
+      "Type": "AWS::DMS::ReplicationInstance",
+      "Properties": {
+        "ReplicationInstanceClass": "dms.r5.2xlarge",
+        "AutoMinorVersionUpgrade": true,
+        "EngineVersion": "3.4.3",
+        "MultiAZ": true,
+        "PubliclyAccessible": false,
+        "ReplicationInstanceIdentifier": "dbserver4-instance",
+        "ReplicationSubnetGroupIdentifier": {
+          "Ref": "DMSReplicationSubnetGrp"
+        },
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-instance"
+      }
+    },
+    "dbserver4dbname1sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname1",
+        "EndpointIdentifier": "dbserver4-dbname1-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.13",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-dbname1-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver4dbname1s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver4-dbname1-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver4/dbname1/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-dbname1-s3-target-endpoint"
+      }
+    },
+    "dbserver4dbname1all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver4instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver4dbname1sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver4dbname1s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver4-dbname1-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-dbname1-all"
+      }
+    },
+    "dbserver4dbname2sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname2",
+        "EndpointIdentifier": "dbserver4-dbname2-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.13",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-dbname2-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver4dbname2s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver4-dbname2-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver4/dbname2/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-dbname2-s3-target-endpoint"
+      }
+    },
+    "dbserver4dbname2all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver4instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver4dbname2sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver4dbname2s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver4-dbname2-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver4-dbname2-all"
+      }
+    },
+    "dbserver5instance": {
+      "Type": "AWS::DMS::ReplicationInstance",
+      "Properties": {
+        "ReplicationInstanceClass": "dms.r5.2xlarge",
+        "AutoMinorVersionUpgrade": true,
+        "EngineVersion": "3.4.3",
+        "MultiAZ": true,
+        "PubliclyAccessible": false,
+        "ReplicationInstanceIdentifier": "dbserver5-instance",
+        "ReplicationSubnetGroupIdentifier": {
+          "Ref": "DMSReplicationSubnetGrp"
+        },
+        "VpcSecurityGroupIds": [
+          {
+            "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver5-instance"
+      }
+    },
+    "dbserver5dbname1sqlserversourceendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "source",
+        "EngineName": "sqlserver",
+        "DatabaseName": "dbname1",
+        "EndpointIdentifier": "dbserver5-dbname1-sqlserver-source-endpoint",
+        "Password": "pwd",
+        "Port": 1433,
+        "ServerName": "10.10.10.14",
+        "SslMode": "require",
+        "Username": "user"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver5-dbname1-sqlserver-source-endpoint"
+      }
+    },
+    "dbserver5dbname1s3targetendpoint": {
+      "Type": "AWS::DMS::Endpoint",
+      "Properties": {
+        "EndpointType": "target",
+        "EngineName": "s3",
+        "EndpointIdentifier": "dbserver5-dbname1-s3-target-endpoint",
+        "ExtraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+        "S3Settings": {
+          "BucketFolder": "data/dbserver5/dbname1/",
+          "BucketName": {
+            "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+          },
+          "CompressionType": "GZIP",
+          "ServiceAccessRoleArn": {
+            "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver5-dbname1-s3-target-endpoint"
+      }
+    },
+    "dbserver5dbname1all": {
+      "Type": "AWS::DMS::ReplicationTask",
+      "Properties": {
+        "MigrationType": "full-load-and-cdc",
+        "ReplicationInstanceArn": {
+          "Ref": "dbserver5instance"
+        },
+        "SourceEndpointArn": {
+          "Ref": "dbserver5dbname1sqlserversourceendpoint"
+        },
+        "TableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+        "TargetEndpointArn": {
+          "Ref": "dbserver5dbname1s3targetendpoint"
+        },
+        "ReplicationTaskIdentifier": "dbserver5-dbname1-all"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/dbserver5-dbname1-all"
+      }
+    },
+    "failureeventinstance": {
+      "Type": "AWS::DMS::EventSubscription",
+      "Properties": {
+        "SnsTopicArn": {
+          "Fn::ImportValue": "SnsStack:ExportsOutputRefSNSAlertEmailTopicFB2E864A4FB63AE1"
+        },
+        "Enabled": true,
+        "EventCategories": [
+          "failure"
+        ],
+        "SourceType": "replication-instance"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/failure_event_instance"
+      }
+    },
+    "failureeventtask": {
+      "Type": "AWS::DMS::EventSubscription",
+      "Properties": {
+        "SnsTopicArn": {
+          "Fn::ImportValue": "SnsStack:ExportsOutputRefSNSAlertEmailTopicFB2E864A4FB63AE1"
+        },
+        "Enabled": true,
+        "EventCategories": [
+          "failure"
+        ],
+        "SourceType": "replication-task"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/failure_event_task"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAE12NywrCMBBFv6X7OG0pgkuhiLiT1h+Ik4hj7SQkE0VK/90+VrqaC+feMyWURQVFttfvuEHT5QO6YGFoRWOnasdRQkJR9Y0bG10KaOc8AUNCjkc1D00fYVgq/kmoZ9CmK1s5Bpe8+iWnyal59RzYeEcsf5WLjt2CX5ZlMkUM5Jd3ozp/5O44r2AH2+wRiTYhsVBvoVnvF7SYrfnTAAAA"
+      },
+      "Metadata": {
+        "aws:cdk:path": "DmsStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

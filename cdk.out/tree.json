@@ -1,0 +1,2161 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Construct",
+          "version": "1.103.0"
+        }
+      },
+      "IamStack": {
+        "id": "IamStack",
+        "path": "IamStack",
+        "children": {
+          "dms_target_s3_access_role": {
+            "id": "dms_target_s3_access_role",
+            "path": "IamStack/dms_target_s3_access_role",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "IamStack/dms_target_s3_access_role/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "dms.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/AmazonS3FullAccess"
+                          ]
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-iam.CfnRole",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-iam.Role",
+              "version": "1.103.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "IamStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "IamStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnResource",
+                  "version": "1.103.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "IamStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnCondition",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "IamStack/Exports",
+            "children": {
+              "Output{\"Fn::GetAtt\":[\"dmstargets3accessrole822BADB8\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"dmstargets3accessrole822BADB8\",\"Arn\"]}",
+                "path": "IamStack/Exports/Output{\"Fn::GetAtt\":[\"dmstargets3accessrole822BADB8\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnOutput",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "1.103.0"
+        }
+      },
+      "S3Stack": {
+        "id": "S3Stack",
+        "path": "S3Stack",
+        "children": {
+          "datalake-stage": {
+            "id": "datalake-stage",
+            "path": "S3Stack/datalake-stage",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "S3Stack/datalake-stage/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketEncryption": {
+                      "serverSideEncryptionConfiguration": [
+                        {
+                          "serverSideEncryptionByDefault": {
+                            "sseAlgorithm": "AES256"
+                          }
+                        }
+                      ]
+                    },
+                    "lifecycleConfiguration": {
+                      "rules": [
+                        {
+                          "status": "Enabled",
+                          "transitions": [
+                            {
+                              "storageClass": "GLACIER",
+                              "transitionInDays": 365
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "metricsConfigurations": [
+                      {
+                        "id": "EntireBucket"
+                      }
+                    ],
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": true,
+                      "blockPublicPolicy": true,
+                      "ignorePublicAcls": true,
+                      "restrictPublicBuckets": true
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-s3.CfnBucket",
+                  "version": "1.103.0"
+                }
+              },
+              "Notifications": {
+                "id": "Notifications",
+                "path": "S3Stack/datalake-stage/Notifications",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.Construct",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-s3.Bucket",
+              "version": "1.103.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "S3Stack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "S3Stack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnResource",
+                  "version": "1.103.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "S3Stack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnCondition",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "S3Stack/Exports",
+            "children": {
+              "Output{\"Ref\":\"datalakestageE371C16F\"}": {
+                "id": "Output{\"Ref\":\"datalakestageE371C16F\"}",
+                "path": "S3Stack/Exports/Output{\"Ref\":\"datalakestageE371C16F\"}",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnOutput",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "1.103.0"
+        }
+      },
+      "SnsStack": {
+        "id": "SnsStack",
+        "path": "SnsStack",
+        "children": {
+          "SNSAlertEmailTopic": {
+            "id": "SNSAlertEmailTopic",
+            "path": "SnsStack/SNSAlertEmailTopic",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "SnsStack/SNSAlertEmailTopic/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {
+                    "topicName": "dms-failure-alert-topic"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-sns.CfnTopic",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-sns.Topic",
+              "version": "1.103.0"
+            }
+          },
+          "StepFunctionsAlert_Email": {
+            "id": "StepFunctionsAlert_Email",
+            "path": "SnsStack/StepFunctionsAlert_Email",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "SnsStack/StepFunctionsAlert_Email/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                  "aws:cdk:cloudformation:props": {
+                    "protocol": "email",
+                    "topicArn": {
+                      "Ref": "SNSAlertEmailTopicFB2E864A"
+                    },
+                    "endpoint": "abcd@yahoo.com"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-sns.CfnSubscription",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-sns.Subscription",
+              "version": "1.103.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "SnsStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "SnsStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnResource",
+                  "version": "1.103.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "SnsStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnCondition",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "SnsStack/Exports",
+            "children": {
+              "Output{\"Ref\":\"SNSAlertEmailTopicFB2E864A\"}": {
+                "id": "Output{\"Ref\":\"SNSAlertEmailTopicFB2E864A\"}",
+                "path": "SnsStack/Exports/Output{\"Ref\":\"SNSAlertEmailTopicFB2E864A\"}",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnOutput",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "1.103.0"
+        }
+      },
+      "VpcStack": {
+        "id": "VpcStack",
+        "path": "VpcStack",
+        "children": {
+          "vpc": {
+            "id": "vpc",
+            "path": "VpcStack/vpc",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "VpcStack/vpc/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPC",
+                  "aws:cdk:cloudformation:props": {
+                    "cidrBlock": "10.0.0.0/18",
+                    "enableDnsHostnames": true,
+                    "enableDnsSupport": true,
+                    "instanceTenancy": "default",
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "VpcStack/vpc"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.CfnVPC",
+                  "version": "1.103.0"
+                }
+              },
+              "publicSubnet1": {
+                "id": "publicSubnet1",
+                "path": "VpcStack/vpc/publicSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "VpcStack/vpc/publicSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.0.0/24",
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            0,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnet",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "VpcStack/vpc/publicSubnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "VpcStack/vpc/publicSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRouteTable",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "VpcStack/vpc/publicSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcpublicSubnet1RouteTableA38152FE"
+                        },
+                        "subnetId": {
+                          "Ref": "vpcpublicSubnet1SubnetA635257E"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnetRouteTableAssociation",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "VpcStack/vpc/publicSubnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcpublicSubnet1RouteTableA38152FE"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "vpcIGWE57CBDCA"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRoute",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "EIP": {
+                    "id": "EIP",
+                    "path": "VpcStack/vpc/publicSubnet1/EIP",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::EIP",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "vpc",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnEIP",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "NATGateway": {
+                    "id": "NATGateway",
+                    "path": "VpcStack/vpc/publicSubnet1/NATGateway",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::NatGateway",
+                      "aws:cdk:cloudformation:props": {
+                        "allocationId": {
+                          "Fn::GetAtt": [
+                            "vpcpublicSubnet1EIP909BE2D3",
+                            "AllocationId"
+                          ]
+                        },
+                        "subnetId": {
+                          "Ref": "vpcpublicSubnet1SubnetA635257E"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnNatGateway",
+                      "version": "1.103.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.PublicSubnet",
+                  "version": "1.103.0"
+                }
+              },
+              "publicSubnet2": {
+                "id": "publicSubnet2",
+                "path": "VpcStack/vpc/publicSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "VpcStack/vpc/publicSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.1.0/24",
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            1,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": true,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "public"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Public"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnet",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "VpcStack/vpc/publicSubnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "VpcStack/vpc/publicSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRouteTable",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "VpcStack/vpc/publicSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcpublicSubnet2RouteTableA6135437"
+                        },
+                        "subnetId": {
+                          "Ref": "vpcpublicSubnet2Subnet027D165B"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnetRouteTableAssociation",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "VpcStack/vpc/publicSubnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcpublicSubnet2RouteTableA6135437"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "gatewayId": {
+                          "Ref": "vpcIGWE57CBDCA"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRoute",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "EIP": {
+                    "id": "EIP",
+                    "path": "VpcStack/vpc/publicSubnet2/EIP",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::EIP",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "vpc",
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnEIP",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "NATGateway": {
+                    "id": "NATGateway",
+                    "path": "VpcStack/vpc/publicSubnet2/NATGateway",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::NatGateway",
+                      "aws:cdk:cloudformation:props": {
+                        "allocationId": {
+                          "Fn::GetAtt": [
+                            "vpcpublicSubnet2EIPB56D1A92",
+                            "AllocationId"
+                          ]
+                        },
+                        "subnetId": {
+                          "Ref": "vpcpublicSubnet2Subnet027D165B"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/publicSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnNatGateway",
+                      "version": "1.103.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.PublicSubnet",
+                  "version": "1.103.0"
+                }
+              },
+              "privateSubnet1": {
+                "id": "privateSubnet1",
+                "path": "VpcStack/vpc/privateSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "VpcStack/vpc/privateSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.2.0/23",
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            0,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/privateSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnet",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "VpcStack/vpc/privateSubnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "VpcStack/vpc/privateSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/privateSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRouteTable",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "VpcStack/vpc/privateSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcprivateSubnet1RouteTableC1CE9D76"
+                        },
+                        "subnetId": {
+                          "Ref": "vpcprivateSubnet1SubnetAE1393DC"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnetRouteTableAssociation",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "VpcStack/vpc/privateSubnet1/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcprivateSubnet1RouteTableC1CE9D76"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "vpcpublicSubnet1NATGateway974E731F"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRoute",
+                      "version": "1.103.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.PrivateSubnet",
+                  "version": "1.103.0"
+                }
+              },
+              "privateSubnet2": {
+                "id": "privateSubnet2",
+                "path": "VpcStack/vpc/privateSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "VpcStack/vpc/privateSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.4.0/23",
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            1,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "private"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Private"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/privateSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnet",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "VpcStack/vpc/privateSubnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "VpcStack/vpc/privateSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/privateSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRouteTable",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "VpcStack/vpc/privateSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcprivateSubnet2RouteTable882A110C"
+                        },
+                        "subnetId": {
+                          "Ref": "vpcprivateSubnet2Subnet1C8B0CEE"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnetRouteTableAssociation",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "DefaultRoute": {
+                    "id": "DefaultRoute",
+                    "path": "VpcStack/vpc/privateSubnet2/DefaultRoute",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcprivateSubnet2RouteTable882A110C"
+                        },
+                        "destinationCidrBlock": "0.0.0.0/0",
+                        "natGatewayId": {
+                          "Ref": "vpcpublicSubnet2NATGateway97E8DB6F"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRoute",
+                      "version": "1.103.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.PrivateSubnet",
+                  "version": "1.103.0"
+                }
+              },
+              "isolatedSubnet1": {
+                "id": "isolatedSubnet1",
+                "path": "VpcStack/vpc/isolatedSubnet1",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "VpcStack/vpc/isolatedSubnet1/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.6.0/23",
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            0,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "isolated"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Isolated"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/isolatedSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnet",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "VpcStack/vpc/isolatedSubnet1/Acl",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "VpcStack/vpc/isolatedSubnet1/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/isolatedSubnet1"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRouteTable",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "VpcStack/vpc/isolatedSubnet1/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcisolatedSubnet1RouteTable7903AE22"
+                        },
+                        "subnetId": {
+                          "Ref": "vpcisolatedSubnet1Subnet06BBE51F"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnetRouteTableAssociation",
+                      "version": "1.103.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.PrivateSubnet",
+                  "version": "1.103.0"
+                }
+              },
+              "isolatedSubnet2": {
+                "id": "isolatedSubnet2",
+                "path": "VpcStack/vpc/isolatedSubnet2",
+                "children": {
+                  "Subnet": {
+                    "id": "Subnet",
+                    "path": "VpcStack/vpc/isolatedSubnet2/Subnet",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::Subnet",
+                      "aws:cdk:cloudformation:props": {
+                        "cidrBlock": "10.0.8.0/23",
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "availabilityZone": {
+                          "Fn::Select": [
+                            1,
+                            {
+                              "Fn::GetAZs": ""
+                            }
+                          ]
+                        },
+                        "mapPublicIpOnLaunch": false,
+                        "tags": [
+                          {
+                            "key": "aws-cdk:subnet-name",
+                            "value": "isolated"
+                          },
+                          {
+                            "key": "aws-cdk:subnet-type",
+                            "value": "Isolated"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/isolatedSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnet",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "Acl": {
+                    "id": "Acl",
+                    "path": "VpcStack/vpc/isolatedSubnet2/Acl",
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/core.Resource",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTable": {
+                    "id": "RouteTable",
+                    "path": "VpcStack/vpc/isolatedSubnet2/RouteTable",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::RouteTable",
+                      "aws:cdk:cloudformation:props": {
+                        "vpcId": {
+                          "Ref": "vpcA2121C38"
+                        },
+                        "tags": [
+                          {
+                            "key": "Name",
+                            "value": "VpcStack/vpc/isolatedSubnet2"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnRouteTable",
+                      "version": "1.103.0"
+                    }
+                  },
+                  "RouteTableAssociation": {
+                    "id": "RouteTableAssociation",
+                    "path": "VpcStack/vpc/isolatedSubnet2/RouteTableAssociation",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SubnetRouteTableAssociation",
+                      "aws:cdk:cloudformation:props": {
+                        "routeTableId": {
+                          "Ref": "vpcisolatedSubnet2RouteTableD2247699"
+                        },
+                        "subnetId": {
+                          "Ref": "vpcisolatedSubnet2Subnet51F71E92"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "@aws-cdk/aws-ec2.CfnSubnetRouteTableAssociation",
+                      "version": "1.103.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.PrivateSubnet",
+                  "version": "1.103.0"
+                }
+              },
+              "IGW": {
+                "id": "IGW",
+                "path": "VpcStack/vpc/IGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::InternetGateway",
+                  "aws:cdk:cloudformation:props": {
+                    "tags": [
+                      {
+                        "key": "Name",
+                        "value": "VpcStack/vpc"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.CfnInternetGateway",
+                  "version": "1.103.0"
+                }
+              },
+              "VPCGW": {
+                "id": "VPCGW",
+                "path": "VpcStack/vpc/VPCGW",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::VPCGatewayAttachment",
+                  "aws:cdk:cloudformation:props": {
+                    "vpcId": {
+                      "Ref": "vpcA2121C38"
+                    },
+                    "internetGatewayId": {
+                      "Ref": "vpcIGWE57CBDCA"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "@aws-cdk/aws-ec2.CfnVPCGatewayAttachment",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-ec2.Vpc",
+              "version": "1.103.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "VpcStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "VpcStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnResource",
+                  "version": "1.103.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "VpcStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnCondition",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "VpcStack/Exports",
+            "children": {
+              "Output{\"Ref\":\"vpcprivateSubnet1SubnetAE1393DC\"}": {
+                "id": "Output{\"Ref\":\"vpcprivateSubnet1SubnetAE1393DC\"}",
+                "path": "VpcStack/Exports/Output{\"Ref\":\"vpcprivateSubnet1SubnetAE1393DC\"}",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnOutput",
+                  "version": "1.103.0"
+                }
+              },
+              "Output{\"Ref\":\"vpcprivateSubnet2Subnet1C8B0CEE\"}": {
+                "id": "Output{\"Ref\":\"vpcprivateSubnet2Subnet1C8B0CEE\"}",
+                "path": "VpcStack/Exports/Output{\"Ref\":\"vpcprivateSubnet2Subnet1C8B0CEE\"}",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnOutput",
+                  "version": "1.103.0"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"vpcA2121C38\",\"DefaultSecurityGroup\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"vpcA2121C38\",\"DefaultSecurityGroup\"]}",
+                "path": "VpcStack/Exports/Output{\"Fn::GetAtt\":[\"vpcA2121C38\",\"DefaultSecurityGroup\"]}",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnOutput",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "1.103.0"
+        }
+      },
+      "DmsStack": {
+        "id": "DmsStack",
+        "path": "DmsStack",
+        "children": {
+          "DMSReplicationSubnetGrp": {
+            "id": "DMSReplicationSubnetGrp",
+            "path": "DmsStack/DMSReplicationSubnetGrp",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationSubnetGroup",
+              "aws:cdk:cloudformation:props": {
+                "replicationSubnetGroupDescription": "DMS replication subnet group",
+                "subnetIds": [
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputRefvpcprivateSubnet1SubnetAE1393DC18E7B349"
+                  },
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputRefvpcprivateSubnet2Subnet1C8B0CEE5A404381"
+                  }
+                ],
+                "replicationSubnetGroupIdentifier": "aws-cdk-cdk-subnetgroup"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationSubnetGroup",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-instance": {
+            "id": "dbserver1-instance",
+            "path": "DmsStack/dbserver1-instance",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationInstance",
+              "aws:cdk:cloudformation:props": {
+                "replicationInstanceClass": "dms.r5.2xlarge",
+                "autoMinorVersionUpgrade": true,
+                "engineVersion": "3.4.3",
+                "multiAz": true,
+                "publiclyAccessible": false,
+                "replicationInstanceIdentifier": "dbserver1-instance",
+                "replicationSubnetGroupIdentifier": {
+                  "Ref": "DMSReplicationSubnetGrp"
+                },
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationInstance",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname1-sqlserver-source-endpoint": {
+            "id": "dbserver1-dbname1-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver1-dbname1-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname1",
+                "endpointIdentifier": "dbserver1-dbname1-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.10",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname1-s3-target-endpoint": {
+            "id": "dbserver1-dbname1-s3-target-endpoint",
+            "path": "DmsStack/dbserver1-dbname1-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver1-dbname1-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver1/dbname1/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname1-all": {
+            "id": "dbserver1-dbname1-all",
+            "path": "DmsStack/dbserver1-dbname1-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver1instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver1dbname1sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver1dbname1s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver1-dbname1-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname2-sqlserver-source-endpoint": {
+            "id": "dbserver1-dbname2-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver1-dbname2-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname2",
+                "endpointIdentifier": "dbserver1-dbname2-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.10",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname2-s3-target-endpoint": {
+            "id": "dbserver1-dbname2-s3-target-endpoint",
+            "path": "DmsStack/dbserver1-dbname2-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver1-dbname2-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver1/dbname2/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname2-all": {
+            "id": "dbserver1-dbname2-all",
+            "path": "DmsStack/dbserver1-dbname2-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver1instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver1dbname2sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver1dbname2s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver1-dbname2-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname3-sqlserver-source-endpoint": {
+            "id": "dbserver1-dbname3-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver1-dbname3-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname3",
+                "endpointIdentifier": "dbserver1-dbname3-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.10",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname3-s3-target-endpoint": {
+            "id": "dbserver1-dbname3-s3-target-endpoint",
+            "path": "DmsStack/dbserver1-dbname3-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver1-dbname3-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver1/dbname3/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver1-dbname3-all": {
+            "id": "dbserver1-dbname3-all",
+            "path": "DmsStack/dbserver1-dbname3-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver1instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver1dbname3sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver1dbname3s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver1-dbname3-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver2-instance": {
+            "id": "dbserver2-instance",
+            "path": "DmsStack/dbserver2-instance",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationInstance",
+              "aws:cdk:cloudformation:props": {
+                "replicationInstanceClass": "dms.r5.2xlarge",
+                "autoMinorVersionUpgrade": true,
+                "engineVersion": "3.4.3",
+                "multiAz": true,
+                "publiclyAccessible": false,
+                "replicationInstanceIdentifier": "dbserver2-instance",
+                "replicationSubnetGroupIdentifier": {
+                  "Ref": "DMSReplicationSubnetGrp"
+                },
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationInstance",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver2-dbname1-sqlserver-source-endpoint": {
+            "id": "dbserver2-dbname1-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver2-dbname1-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname1",
+                "endpointIdentifier": "dbserver2-dbname1-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.11",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver2-dbname1-s3-target-endpoint": {
+            "id": "dbserver2-dbname1-s3-target-endpoint",
+            "path": "DmsStack/dbserver2-dbname1-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver2-dbname1-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver2/dbname1/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver2-dbname1-all": {
+            "id": "dbserver2-dbname1-all",
+            "path": "DmsStack/dbserver2-dbname1-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver2instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver2dbname1sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver2dbname1s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver2-dbname1-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-instance": {
+            "id": "dbserver3-instance",
+            "path": "DmsStack/dbserver3-instance",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationInstance",
+              "aws:cdk:cloudformation:props": {
+                "replicationInstanceClass": "dms.r5.2xlarge",
+                "autoMinorVersionUpgrade": true,
+                "engineVersion": "3.4.3",
+                "multiAz": true,
+                "publiclyAccessible": false,
+                "replicationInstanceIdentifier": "dbserver3-instance",
+                "replicationSubnetGroupIdentifier": {
+                  "Ref": "DMSReplicationSubnetGrp"
+                },
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationInstance",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-dbname1-sqlserver-source-endpoint": {
+            "id": "dbserver3-dbname1-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver3-dbname1-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname1",
+                "endpointIdentifier": "dbserver3-dbname1-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.12",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-dbname1-s3-target-endpoint": {
+            "id": "dbserver3-dbname1-s3-target-endpoint",
+            "path": "DmsStack/dbserver3-dbname1-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver3-dbname1-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver3/dbname1/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-dbname1-all": {
+            "id": "dbserver3-dbname1-all",
+            "path": "DmsStack/dbserver3-dbname1-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver3instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver3dbname1sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver3dbname1s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver3-dbname1-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-dbname2-sqlserver-source-endpoint": {
+            "id": "dbserver3-dbname2-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver3-dbname2-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname2",
+                "endpointIdentifier": "dbserver3-dbname2-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.12",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-dbname2-s3-target-endpoint": {
+            "id": "dbserver3-dbname2-s3-target-endpoint",
+            "path": "DmsStack/dbserver3-dbname2-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver3-dbname2-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver3/dbname2/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver3-dbname2-all": {
+            "id": "dbserver3-dbname2-all",
+            "path": "DmsStack/dbserver3-dbname2-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver3instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver3dbname2sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver3dbname2s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver3-dbname2-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-instance": {
+            "id": "dbserver4-instance",
+            "path": "DmsStack/dbserver4-instance",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationInstance",
+              "aws:cdk:cloudformation:props": {
+                "replicationInstanceClass": "dms.r5.2xlarge",
+                "autoMinorVersionUpgrade": true,
+                "engineVersion": "3.4.3",
+                "multiAz": true,
+                "publiclyAccessible": false,
+                "replicationInstanceIdentifier": "dbserver4-instance",
+                "replicationSubnetGroupIdentifier": {
+                  "Ref": "DMSReplicationSubnetGrp"
+                },
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationInstance",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-dbname1-sqlserver-source-endpoint": {
+            "id": "dbserver4-dbname1-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver4-dbname1-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname1",
+                "endpointIdentifier": "dbserver4-dbname1-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.13",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-dbname1-s3-target-endpoint": {
+            "id": "dbserver4-dbname1-s3-target-endpoint",
+            "path": "DmsStack/dbserver4-dbname1-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver4-dbname1-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver4/dbname1/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-dbname1-all": {
+            "id": "dbserver4-dbname1-all",
+            "path": "DmsStack/dbserver4-dbname1-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver4instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver4dbname1sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver4dbname1s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver4-dbname1-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-dbname2-sqlserver-source-endpoint": {
+            "id": "dbserver4-dbname2-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver4-dbname2-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname2",
+                "endpointIdentifier": "dbserver4-dbname2-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.13",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-dbname2-s3-target-endpoint": {
+            "id": "dbserver4-dbname2-s3-target-endpoint",
+            "path": "DmsStack/dbserver4-dbname2-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver4-dbname2-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver4/dbname2/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver4-dbname2-all": {
+            "id": "dbserver4-dbname2-all",
+            "path": "DmsStack/dbserver4-dbname2-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver4instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver4dbname2sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver4dbname2s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver4-dbname2-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver5-instance": {
+            "id": "dbserver5-instance",
+            "path": "DmsStack/dbserver5-instance",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationInstance",
+              "aws:cdk:cloudformation:props": {
+                "replicationInstanceClass": "dms.r5.2xlarge",
+                "autoMinorVersionUpgrade": true,
+                "engineVersion": "3.4.3",
+                "multiAz": true,
+                "publiclyAccessible": false,
+                "replicationInstanceIdentifier": "dbserver5-instance",
+                "replicationSubnetGroupIdentifier": {
+                  "Ref": "DMSReplicationSubnetGrp"
+                },
+                "vpcSecurityGroupIds": [
+                  {
+                    "Fn::ImportValue": "VpcStack:ExportsOutputFnGetAttvpcA2121C38DefaultSecurityGroupA3940787"
+                  }
+                ]
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationInstance",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver5-dbname1-sqlserver-source-endpoint": {
+            "id": "dbserver5-dbname1-sqlserver-source-endpoint",
+            "path": "DmsStack/dbserver5-dbname1-sqlserver-source-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "source",
+                "engineName": "sqlserver",
+                "databaseName": "dbname1",
+                "endpointIdentifier": "dbserver5-dbname1-sqlserver-source-endpoint",
+                "password": "pwd",
+                "port": 1433,
+                "serverName": "10.10.10.14",
+                "sslMode": "require",
+                "username": "user"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver5-dbname1-s3-target-endpoint": {
+            "id": "dbserver5-dbname1-s3-target-endpoint",
+            "path": "DmsStack/dbserver5-dbname1-s3-target-endpoint",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::Endpoint",
+              "aws:cdk:cloudformation:props": {
+                "endpointType": "target",
+                "engineName": "s3",
+                "endpointIdentifier": "dbserver5-dbname1-s3-target-endpoint",
+                "extraConnectionAttributes": "encryptionMode=SSE_S3;timestampColumnName=TX_TIMESTAMP;dataFormat=parquet;parquetVersion=PARQUET_2_0;parquetTimestampInMillisecond=true;maxFileSize=4096;",
+                "s3Settings": {
+                  "bucketFolder": "data/dbserver5/dbname1/",
+                  "bucketName": {
+                    "Fn::ImportValue": "S3Stack:ExportsOutputRefdatalakestageE371C16F5225D959"
+                  },
+                  "compressionType": "GZIP",
+                  "serviceAccessRoleArn": {
+                    "Fn::ImportValue": "IamStack:ExportsOutputFnGetAttdmstargets3accessrole822BADB8ArnA1860007"
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEndpoint",
+              "version": "1.103.0"
+            }
+          },
+          "dbserver5-dbname1-all": {
+            "id": "dbserver5-dbname1-all",
+            "path": "DmsStack/dbserver5-dbname1-all",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::ReplicationTask",
+              "aws:cdk:cloudformation:props": {
+                "migrationType": "full-load-and-cdc",
+                "replicationInstanceArn": {
+                  "Ref": "dbserver5instance"
+                },
+                "sourceEndpointArn": {
+                  "Ref": "dbserver5dbname1sqlserversourceendpoint"
+                },
+                "tableMappings": "{\"rules\": [{\"rule-type\": \"transformation\", \"rule-id\": \"1\", \"rule-name\": \"1\", \"rule-target\": \"column\", \"object-locator\": {\"schema-name\": \"%\", \"table-name\": \"%\", \"column-name\": \"%\", \"data-type\": \"uint1\"}, \"rule-action\": \"change-data-type\", \"data-type\": {\"type\": \"int4\"}}, {\"rule-type\": \"selection\", \"rule-id\": \"3\", \"rule-name\": \"3\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table1\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"5\", \"rule-name\": \"5\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table2\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"8\", \"rule-name\": \"8\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table3\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"9\", \"rule-name\": \"9\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table4\"}, \"rule-action\": \"include\", \"filters\": []}, {\"rule-type\": \"selection\", \"rule-id\": \"11\", \"rule-name\": \"11\", \"object-locator\": {\"schema-name\": \"dbo\", \"table-name\": \"Table5\"}, \"rule-action\": \"include\", \"filters\": []}]}",
+                "targetEndpointArn": {
+                  "Ref": "dbserver5dbname1s3targetendpoint"
+                },
+                "replicationTaskIdentifier": "dbserver5-dbname1-all"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnReplicationTask",
+              "version": "1.103.0"
+            }
+          },
+          "failure_event_instance": {
+            "id": "failure_event_instance",
+            "path": "DmsStack/failure_event_instance",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::EventSubscription",
+              "aws:cdk:cloudformation:props": {
+                "snsTopicArn": {
+                  "Fn::ImportValue": "SnsStack:ExportsOutputRefSNSAlertEmailTopicFB2E864A4FB63AE1"
+                },
+                "enabled": true,
+                "eventCategories": [
+                  "failure"
+                ],
+                "sourceType": "replication-instance"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEventSubscription",
+              "version": "1.103.0"
+            }
+          },
+          "failure_event_task": {
+            "id": "failure_event_task",
+            "path": "DmsStack/failure_event_task",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::DMS::EventSubscription",
+              "aws:cdk:cloudformation:props": {
+                "snsTopicArn": {
+                  "Fn::ImportValue": "SnsStack:ExportsOutputRefSNSAlertEmailTopicFB2E864A4FB63AE1"
+                },
+                "enabled": true,
+                "eventCategories": [
+                  "failure"
+                ],
+                "sourceType": "replication-task"
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/aws-dms.CfnEventSubscription",
+              "version": "1.103.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "DmsStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "DmsStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnResource",
+                  "version": "1.103.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "DmsStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "@aws-cdk/core.CfnCondition",
+                  "version": "1.103.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "@aws-cdk/core.Construct",
+              "version": "1.103.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "@aws-cdk/core.Stack",
+          "version": "1.103.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "@aws-cdk/core.App",
+      "version": "1.103.0"
+    }
+  }
+}
