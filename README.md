@@ -255,7 +255,7 @@ Hit “y” and you’ll see your stacks being destroyed
 
 ****Conclusion*****
 
-Using AWS CDK APIs, it is easy to automate the process of deploying the DMS tasks with few lines of code and can scale the deployments for multiple databases.
+Using AWS CDK APIs,it is easy to automate the process of deploying the DMS tasks with few lines of code and can scale the deployments for multiple databases.
 
 
 
